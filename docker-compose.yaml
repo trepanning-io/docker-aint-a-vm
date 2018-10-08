@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  bash:
+    container_name: bash
+    image: size/bash:alpine3.7
+    build: bash
+  python2:
+    container_name: python2
+    image: size/python:2
+    build: python2
+  python3:
+    container_name: python3
+    image: size/python:3
+    build: python3
+  golang-1.10:
+    container_name: golang-1.10
+    image: size/golang:1.10
+    build: golang-1.10
+  golang-1.10-stripped:
+    container_name: golang-1.10-stripped
+    image: size/golang:1.10-stripped
+    build: golang-1.10-stripped
+  nasm:
+    container_name: nasm
+    image: size/asm:2.10
+    build: nasm
+  node:
+    container_name: node
+    image: size/node:9.11
+    build: node
