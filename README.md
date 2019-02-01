@@ -1,14 +1,14 @@
 # Docker != Virtual Machine
 
-Despite the growing use of containers over recent years there is still some confusion as to the difference between container and a virtual machine. Most people understand they are both virtualization technologies but are a little hazy on the differences.
+Despite the growing use of containers over recent years there is still some confusion as to the difference between a container and a virtual machine. Most people understand they are both virtualization technologies but are a little hazy on the differences.
 
-The aim of this repo is to help clarify the difference. In a nutshell the difference is a VM seperates the kernel, file system and networking stack from the host machine. Docker separates only the file system, networking stack and uses a thing called cgroups to isolate the process(es) from the host machine. With Docker both the container and the host use the same kernel.
+The aim of this repo is to help clarify the difference. In a nutshell, the difference is a VM seperates the kernel, file system and networking stack from the host machine. Docker separates only the file system, networking stack and uses a thing called cgroups to isolate the process(es) from the host machine. With Docker both the container and the host use the same kernel.
 
-You are welcome to clone/fork and play with the (code examples)[https://github.com/trepanning-oi/docker-aint-a-vm] as you see fit. Some people (myself included) learn best by playing with things themselves.
+You are welcome to clone/fork and play with the [code examples](https://github.com/trepanning-oi/docker-aint-a-vm) as you see fit. Some people (myself included) learn best by playing with things themselves.
 
 Contained in the repo are multiple containers that all implement the classic "Hello World!" program. It's so classic even Docker uses it as the validation step to prove Docker has installed correctly.
 
-Each container implements the "Hello World!" program in a different language, or a different version of the language. By looking at the differences of each container I'll explain what a container is and why I think there is – understandably – some confusion.
+Each container implements the "Hello World!" program in a different language, or a different version of a language. By looking at the differences of each container I'll explain what a container is and clear up the confusion.
 
 Let's begin by seeing what these containers do. This isn't a primer for Docker, so I'm not going to explain how to install or use it. By using `docker-compose` we can run all the containers in parallel and get the following output:
 
@@ -32,7 +32,7 @@ nasm exited with code 1
 bash exited with code 0
 ```
 
-What we see from each container is two things, that it prints "Hello World!" and the exit code for that container. Eagle-eyes readers will not that `nasm` is the only one with an exit code of 1, I'll explain that later.
+What we see from each container is two things, that it prints "Hello World!" and the exit code for that container. Eagle-eyes readers will note that `nasm` is the only one with an exit code of 1, I'll explain that later.
 
 There are 7 implementations of the "Hello World!" program written in Python2, Python3, Golang 1.10, Node, Bash and ASM (aka `nasm` which is assembler). They are all literally or effectively one line programs and **only** print the string "Hello World!". The only thing each container uses is 12 bytes for the string and however many bytes for the print instruction. 
 
@@ -63,7 +63,7 @@ Lets look at each programming language to see what is being included.
 
 Remember that each container has a separate file system from it's host. That literally means there are two copies of `/etc`, `/usr`, `/var`, and so on, one for the host and one for the container. Now, the container doesn't have to contain **any** files or directories. But it must contain the ones it depends on.
 
-Python depends on a lot. For all practical purposes it depends on a full OS. It certainly depends on a lot of system libraries. Python 2 and Python 3 rank #1 & #3 for the biggest containers. The main reason for this is that the container is based on a "full" OS. In this case Alpine 3.7. How big is that image?
+Python depends on a lot. For all practical purposes it depends on a full OS. It certainly depends on a lot of system libraries. Python 3 and Python 2 rank #1 & #3 for the biggest containers. A possible reason for this is that the container is based on a "full" OS. You can use `docker run --rm -it size/python:2 bash -l` to take a look at what files are in this container. The OS this image is based on is Alpine 3.7. How big is that image?
 
 ```bash
 $ docker images alpine:3.7
@@ -77,9 +77,9 @@ To be fair Python does describe itself as a "batteries included" programming lan
 
 ### Node
 
-Here is another fat boy. Node takes the #2 spot in our Docker image leader board. Like Python, the Node container is based on Alpine 3.7. And like Python the vast majority of the image size is the Node runtime. 
+Node takes the #2 spot in our Docker image leader board. Like Python, the Node container is based on Alpine 3.7. And like Python the vast majority of the image size is the Node runtime. 
 
-Node, like Python, does a lot for the programmer and does so using Javascript! :dizzy_face:
+Node, like Python, does a lot for the programmer and does so using Javascript! :dizzy_face: 
 
 ### Bash
 
@@ -89,7 +89,9 @@ Compared to the previous scripting languages Bash is tiny. It's no bigger than t
 
 This is the first of the compiled languages. It's the first language to leave the MB territory and enter the KB. But to do that there are a few tricks.
 
-Docker isolates one or more processes from the rest of the host, making only the kernel - and only some of it system calls - available. Because Golang is compiled we can drastically reduce the dependencies using a multi-stage Docker files. This means using one "fat" container to build the executable and then copy that exectuable into an empty container. But wait, if all Golang is doing is printing a string to the screen, and that should take 100 bytes or so, why are the Golang containers 1.2MB and 750KB?
+Docker isolates one or more processes from the rest of the host, making only the kernel - and only some of it system calls - available. Because Golang is compiled we can drastically reduce the dependencies using a multi-stage Docker files. This means using one "fat" container to build the executable and then copy that exectuable into an empty container.
+
+But wait, if all Golang is doing is printing a string to the screen, and that should take 100 bytes or so, why are the Golang containers 1.2MB and 750KB?
 
 Once again, it is our old friend the runtime. While Golang does not do "as much" for the programmer as Python or Node, it still does a lot. Those Go routines don't run in thin air! The stripped version of the container is using certain compiler flags to remove unnecessary code. 
 
@@ -97,7 +99,7 @@ Once again, it is our old friend the runtime. While Golang does not do "as much"
 
 And finally the winner for the smallest Docker image. 300B almost 1000x smaller than the next smallest. Like the Golang images, this image is built using a multi-stage Dockerfile so that only the executable goes into the final image. Because it is assembler the programmer has to do **everything**. On the flip side that means our container has almost nothing more than the instruction to print and the 12(-ish) bytes to print.
 
-There are 3 things you need to know.
+Now to explain that exit code. There are 3 things you need to know.
 
 1. I am not a software developer by trade (although I can code in multiple languages with the help of Stack Overflow :trollface:)
 2. The last time I wrote any assembler was back in University, over 20 years ago :scream:
