@@ -73,13 +73,13 @@ alpine              3.7                 bc8fb6e6e49d        31 hours ago        
 
 So Alpine is just over 4MB. Where does the other 54MB (Python2) and 77MB (Python3) come from? That is the Python runtime.
 
-To be fair Python does describe itself as a "batteries included" programming language. And it is a syntactically light and very flexible programming language. Python does a lot of heavy lifting for the programmer and the runtime is the muscle that does that lifting. Python sure has some big :muscle:
+To be fair Python does describe itself as a "batteries included" programming language. And it is a syntactically light and very flexible programming language. Python does a lot of heavy lifting for the programmer and the runtime is the muscle that does that lifting. Python sure has some big muscles. :muscle:
 
 ### Node
 
-Node takes the #2 spot in our Docker image leader board. Like Python, the Node container is based on Alpine 3.7. And like Python the vast majority of the image size is the Node runtime. 
+Node takes the #2 spot in our Docker image size leader board. Like Python, the Node container is based on Alpine 3.7. And like Python the vast majority of the image size is the Node runtime. 
 
-Node, like Python, does a lot for the programmer and does so using Javascript! :dizzy_face: 
+Node, like Python, does a lot for the programmer and does so using Javascript! If you use Chrome (or any modern browser) you might be amazed Node does so much with so little! :dizzy_face:
 
 ### Bash
 
@@ -109,9 +109,9 @@ It is for these reasons that the `nasm` container exits with a code of 1. It sho
 
 ## What does this all mean and why should you care
 
-By looking at different programming languages we have learned that a container does not need to contain anything but the exact code it needs to operate. It needs no files (other than the executable), directories or anything else supporting it. Depending on the programming language you maybe forced to included an OS. Scripting languages like Python and Node can suffer from needing to "download half the Internet" before they can do anything useful. 
+By looking at different programming languages we have learned that a container does not need to contain anything but the exact code it needs to operate. It needs no files (other than the executable), directories or anything else supporting it. Depending on the programming language you maybe forced to included an OS (everything but a kernel). Scripting languages like Python and Node can suffer from needing to "download half the Internet" before they can do anything useful. 
 
 The programming language you choose can have a massive impact on your containerized infrastructure. A system based on images that are MB will always be cheaper and more responsive than a system based on images that are GB. Storage maybe cheap, but would you rather be waiting to download a 1GB image or a 1MB image before your service is online?
 
-To be clear. I am not advocating you must use a compiled language to get the "full benefit" of a container. Node and Python have their place, just as Golang does. And there are techniques you can use in the Dockerfile to minimise total image storage (and transfer). But if your containers are so big you can't tell the difference from a VM are you sure you're using the technology?
+To be clear. I am not advocating you must use a compiled language to get the "full benefit" of a container. Node and Python have their place, just as Golang does. And there are techniques you can use in the Dockerfile to minimise total image storage (and transfer). But if your containers are so big you can't tell the difference from a VM are you sure you're using the right technology?
 
