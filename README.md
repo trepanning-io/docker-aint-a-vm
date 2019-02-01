@@ -73,7 +73,7 @@ alpine              3.7                 bc8fb6e6e49d        31 hours ago        
 
 So Alpine is just over 4MB. Where does the other 54MB (Python2) and 77MB (Python3) come from? That is the Python runtime.
 
-To be fair Python does describe itself as a "batteries included" programming language. And it is a syntactically light and very flexible programming language. Python does a lot of heavy lifting for the programming and the runtime is the muscle that does that lifting. Python sure has some big :muscle:
+To be fair Python does describe itself as a "batteries included" programming language. And it is a syntactically light and very flexible programming language. Python does a lot of heavy lifting for the programmer and the runtime is the muscle that does that lifting. Python sure has some big :muscle:
 
 ### Node
 
