@@ -59,7 +59,7 @@ Remember, all that is happening is we are printing a 12 byte string. OK, you can
 
 Lets look at each programming language to see what is being included.
 
-## Python
+### Python
 
 Remember that each container has a separate file system from it's host. That literally means there are two copies of `/etc`, `/usr`, `/var`, and so on, one for the host and one for the container. Now, the container doesn't have to contain **any** files or directories. But it must contain the ones it depends on.
 
@@ -74,3 +74,42 @@ alpine              3.7                 bc8fb6e6e49d        31 hours ago        
 So Alpine is just over 4MB. Where does the other 54MB (Python2) and 77MB (Python3) come from? That is the Python runtime.
 
 To be fair Python does describe itself as a "batteries included" programming language. And it is a syntactically light and very flexible programming language. Python does a lot of heavy lifting for the programming and the runtime is the muscle that does that lifting. Python sure has some big :muscle:
+
+### Node
+
+Here is another fat boy. Node takes the #2 spot in our Docker image leader board. Like Python, the Node container is based on Alpine 3.7. And like Python the vast majority of the image size is the Node runtime. 
+
+Node, like Python, does a lot for the programmer and does so using Javascript! :dizzy_face:
+
+### Bash
+
+Compared to the previous scripting languages Bash is tiny. It's no bigger than the Alpine image it is based on. But it's hardly a fair comparison to Python and Node. To do much more with Bash would require installing additional applications and using Bash to interact with their CLI.
+
+### Golang
+
+This is the first of the compiled languages. It's the first language to leave the MB territory and enter the KB. But to do that there are a few tricks.
+
+Docker isolates one or more processes from the rest of the host, making only the kernel - and only some of it system calls - available. Because Golang is compiled we can drastically reduce the dependencies using a multi-stage Docker files. This means using one "fat" container to build the executable and then copy that exectuable into an empty container. But wait, if all Golang is doing is printing a string to the screen, and that should take 100 bytes or so, why are the Golang containers 1.2MB and 750KB?
+
+Once again, it is our old friend the runtime. While Golang does not do "as much" for the programmer as Python or Node, it still does a lot. Those Go routines don't run in thin air! The stripped version of the container is using certain compiler flags to remove unnecessary code. 
+
+### Assembler
+
+And finally the winner for the smallest Docker image. 300B almost 1000x smaller than the next smallest. Like the Golang images, this image is built using a multi-stage Dockerfile so that only the executable goes into the final image. Because it is assembler the programmer has to do **everything**. On the flip side that means our container has almost nothing more than the instruction to print and the 12(-ish) bytes to print.
+
+There are 3 things you need to know.
+
+1. I am not a software developer by trade (although I can code in multiple languages with the help of Stack Overflow :trollface:)
+2. The last time I wrote any assembler was back in University, over 20 years ago :scream:
+3. I had no idea what I was doing in assembler then and still have no idea now!
+
+It is for these reasons that the `nasm` container exits with a code of 1. It should not, but I have no idea how to fix it. Fortunatly it's does not matter.
+
+## What does this all mean and why should you care
+
+By looking at different programming languages we have learned that a container does not need to contain anything but the exact code it needs to operate. It needs no files (other than the executable), directories or anything else supporting it. Depending on the programming language you maybe forced to included an OS. Scripting languages like Python and Node can suffer from needing to "download half the Internet" before they can do anything useful. 
+
+The programming language you choose can have a massive impact on your containerized infrastructure. A system based on images that are MB will always be cheaper and more responsive than a system based on images that are GB. Storage maybe cheap, but would you rather be waiting to download a 1GB image or a 1MB image before your service is online?
+
+To be clear. I am not advocating you must use a compiled language to get the "full benefit" of a container. Node and Python have their place, just as Golang does. And there are techniques you can use in the Dockerfile to minimise total image storage (and transfer). But if your containers are so big you can't tell the difference from a VM are you sure you're using the technology?
+
